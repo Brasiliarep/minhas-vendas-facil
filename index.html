@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Minhas Vendas Fácil</title>
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#111827">
+  <style>
+    :root{--bg:#0f172a;--card:#111827;--fg:#e5e7eb;--muted:#9ca3af;--acc:#22c55e;--bad:#ef4444;--warn:#f59e0b;}
+    *{box-sizing:border-box;font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,'Helvetica Neue',sans-serif}
+    body{margin:0;background:linear-gradient(180deg,#0b1220,#0f172a);color:var(--fg)}
+    header{position:sticky;top:0;z-index:2;background:#0b1220d0;backdrop-filter:blur(6px);border-bottom:1px solid #1f2937}
+    header .bar{display:flex;align-items:center;gap:8px;padding:10px 12px}
+    h1{font-size:18px;margin:0;font-weight:700}
+    #gear{margin-left:auto;background:transparent;border:1px solid #374151;color:#e5e7eb;padding:6px 10px;border-radius:10px;cursor:pointer}
+    .container{max-width:1100px;margin:0 auto;padding:12px}
+    .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px}
+    .card{background:var(--card);border:1px solid #1f2937;border-radius:16px;padding:14px;box-shadow:0 6px 20px rgba(0,0,0,.25)}
+    .card h3{margin:0 0 8px 0;font-size:16px}
+    button, .btn{background:#1f2937;border:1px solid #374151;color:#e5e7eb;padding:10px 12px;border-radius:12px;cursor:pointer}
+    button.primary{background:var(--acc);border-color:#16a34a;color:#052e16;font-weight:700}
+    button.warn{background:var(--warn);border-color:#b45309;color:#0b0f1a;font-weight:700}
+    button.bad{background:var(--bad);border-color:#b91c1c}
+    input, select, textarea{width:100%;padding:10px;border-radius:10px;border:1px solid #374151;background:#0b1220;color:#e5e7eb}
+    label{font-size:12px;color:var(--muted)}
+    .row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    .row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+    .row4{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+    .list{display:flex;flex-direction:column;gap:10px}
+    .item{border:1px dashed #374151;border-radius:12px;padding:10px}
+    .toolbar{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px}
+    .right{margin-left:auto}
+    .muted{color:var(--muted);font-size:12px}
+    .total{font-size:16px;font-weight:800}
+    nav{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+    .hidden{display:none}
+    .pill{padding:6px 10px;border:1px solid #374151;border-radius:999px}
+    .danger{color:#fecaca}
+    .success{color:#bbf7d0}
+    @media print{
+      header, nav, .no-print{display:none !important}
+      body{background:#fff;color:#111}
+      .card{border:none;box-shadow:none}
+    }
+  </style>
+</head>
+<body>
+<header>
+  <div class="bar">
+    <h1>Minhas Vendas Fácil</h1>
+    <button id="gear" title="Configurações">⚙️</button>
+  </div>
+</header>
+
+<div class="container">
+  <nav class="no-print">
+    <button class="pill" data-view="home">🏠 Início</button>
+    <button class="pill" data-view="novo">🧾 Novo pedido</button>
+    <button class="pill" data-view="pedidos">📚 Pedidos feitos</button>
+    <button class="pill" data-view="clientes">👤 Clientes</button>
+    <button class="pill" data-view="produtos">🍷 Produtos</button>
+    <button class="pill" data-view="receitas">💹 Receitas</button>
+    <button class="pill" data-view="despesas">💸 Despesas</button>
+    <button class="pill" data-view="agenda">🗓️ Agenda</button>
+    <button class="pill" data-view="prospects">📍 Geolocalização</button>
+    <button class="pill" data-view="catalogos">🗂️ Catálogos</button>
+  </nav>
+
+  <!-- HOME -->
+  <section id="view-home" class="card">
+    <h3>Atalhos</h3>
+    <div class="grid">
+      <button class="primary" data-view="novo">➕ Novo pedido</button>
+      <button data-view="pedidos">📚 Pedidos</button>
+      <button data-view="clientes">👤 Clientes</button>
+      <button data-view="produtos">🍷 Produtos</button>
+      <button data-view="receitas">💹 Receitas</button>
+      <button data-view="despesas">💸 Despesas</button>
+      <button data-view="agenda">🗓️ Agenda</button>
+      <button data-view="prospects">📍 Geolocalização</button>
+      <button data-view="catalogos">🗂️ Catálogos</button>
+    </div>
+  </section>
+
+  <!-- NOVO PEDIDO -->
+  <section id="view-novo" class="card hidden">
+    <h3>Novo pedido</h3>
+    <div class="toolbar">
+      <select id="tipoCliente">
+        <option value="final">Cliente Vinho Final</option>
+        <option value="distribuicao">Cliente Vinho Distribuição</option>
+        <option value="representacao">Cliente Representação</option>
+      </select>
+      <span class="muted">Escolha o tipo para precificação</span>
+    </div>
+    <div class="row">
+      <div>
+        <label>Cliente</label>
+        <input id="clienteNome" placeholder="Digite ou selecione..." list="clientesList"/>
+        <datalist id="clientesList"></datalist>
+      </div>
+      <div>
+        <label>Telefone</label>
+        <input id="clienteTelefone" placeholder="(xx) xxxxx-xxxx"/>
+      </div>
+    </div>
+    <div class="row">
+      <div>
+        <label>Endereço</label>
+        <input id="clienteEndereco" placeholder="Rua, nº, bairro, cidade/UF"/>
+      </div>
+      <div>
+        <label>Observações</label>
+        <input id="pedidoObs" placeholder="Ex: entregar sexta-feira"/>
+      </div>
+    </div>
+
+    <div class="list" id="itens"></div>
+    <button class="no-print" id="addItem">+ Adicionar item</button>
+
+    <div class="row">
+      <div></div>
+      <div class="total">Total: R$ <span id="totalPedido">0,00</span></div>
+    </div>
+    <div class="toolbar">
+      <button class="primary" id="salvarPedido">Salvar pedido</button>
+      <button id="cancelarPedido">Cancelar</button>
+    </div>
+  </section>
+
+  <!-- PEDIDOS -->
+  <section id="view-pedidos" class="card hidden">
+    <h3>Pedidos feitos</h3>
+    <div class="toolbar">
+      <select id="filtroPeriodo">
+        <option value="hoje">Hoje</option>
+        <option value="semana">Semana</option>
+        <option value="mes">Mês</option>
+        <option value="ano">Ano</option>
+        <option value="intervalo">Intervalo...</option>
+        <option value="todos">Todos</option>
+      </select>
+      <input type="date" id="ini" class="hidden">
+      <input type="date" id="fim" class="hidden">
+      <div class="right muted">Clique em um pedido para detalhes, imprimir ou PDF.</div>
+    </div>
+    <div id="listaPedidos" class="list"></div>
+  </section>
+
+  <!-- CLIENTES -->
+  <section id="view-clientes" class="card hidden">
+    <h3>Clientes</h3>
+    <div class="toolbar">
+      <input id="buscaCliente" placeholder="Buscar por nome/telefone/endereço"/>
+      <select id="filtroTipoCliente">
+        <option value="">Todos</option>
+        <option value="final">Final</option>
+        <option value="distribuicao">Distribuição</option>
+        <option value="representacao">Representação</option>
+      </select>
+      <button id="novoClienteBtn">+ Novo</button>
+    </div>
+    <div id="listaClientes" class="list"></div>
+  </section>
+
+  <!-- PRODUTOS -->
+  <section id="view-produtos" class="card hidden">
+    <h3>Produtos</h3>
+    <div class="toolbar">
+      <input id="buscaProduto" placeholder="Buscar por nome/SKU"/>
+      <button id="novoProdutoBtn">+ Novo</button>
+    </div>
+    <div id="listaProdutos" class="list"></div>
+  </section>
+
+  <!-- RECEITAS -->
+  <section id="view-receitas" class="card hidden">
+    <h3>Receitas & Lucro</h3>
+    <div class="toolbar">
+      <select id="recPeriodo">
+        <option value="hoje">Hoje</option>
+        <option value="semana">Semana</option>
+        <option value="mes">Mês</option>
+        <option value="ano">Ano</option>
+        <option value="intervalo">Intervalo...</option>
+        <option value="todos">Todos</option>
+      </select>
+      <input type="date" id="recIni" class="hidden">
+      <input type="date" id="recFim" class="hidden">
+      <select id="recTipo">
+        <option value="">Todos</option>
+        <option value="final">Final</option>
+        <option value="distribuicao">Distribuição</option>
+        <option value="representacao">Representação</option>
+      </select>
+    </div>
+    <div id="painelReceitas" class="list"></div>
+  </section>
+
+  <!-- DESPESAS -->
+  <section id="view-despesas" class="card hidden">
+    <h3>Despesas</h3>
+    <div class="toolbar">
+      <button id="novaDespesaBtn">+ Nova despesa</button>
+    </div>
+    <div id="listaDespesas" class="list"></div>
+  </section>
+
+  <!-- AGENDA -->
+  <section id="view-agenda" class="card hidden">
+    <h3>Agenda (Visitas & Entregas)</h3>
+    <div class="toolbar">
+      <button id="novoCompromissoBtn">+ Novo</button>
+    </div>
+    <div id="listaAgenda" class="list"></div>
+  </section>
+
+  <!-- GEO / PROSPECTS -->
+  <section id="view-prospects" class="card hidden">
+    <h3>Geolocalização (Prospects)</h3>
+    <div class="toolbar">
+      <button class="primary" id="salvarPonto">Salvar ponto atual</button>
+    </div>
+    <div id="listaProspects" class="list"></div>
+  </section>
+
+  <!-- CATALOGOS -->
+  <section id="view-catalogos" class="card hidden">
+    <h3>Catálogos</h3>
+    <div class="toolbar">
+      <select id="modoCatalogo">
+        <option value="final">Cliente Final</option>
+        <option value="distribuicao">Cliente Distribuição</option>
+        <option value="sistema">Sistema (interno)</option>
+      </select>
+    </div>
+    <div id="catalogoWrap" class="list"></div>
+  </section>
+
+  <!-- CONFIG -->
+  <section id="view-config" class="card hidden">
+    <h3>Configurações</h3>
+    <div class="row">
+      <div><label>Seu nome</label><input id="pfNome"></div>
+      <div><label>Empresa</label><input id="pfEmpresa"></div>
+    </div>
+    <div class="row">
+      <div><label>Documento</label><input id="pfDoc"></div>
+      <div><label>Telefone/WhatsApp</label><input id="pfTel"></div>
+    </div>
+    <div><label>Endereço comercial</label><input id="pfEnd"></div>
+    <div class="row">
+      <div><label>E-mail</label><input id="pfEmail"></div>
+      <div><label>Prefixo nº pedido</label><input id="pfPrefixo" placeholder="MVF-"></div>
+    </div>
+    <div class="row">
+      <div><label>Sequencial atual</label><input id="pfSeq" type="number" min="1" value="1"></div>
+      <div><label>Observação padrão</label><input id="pfObs"></div>
+    </div>
+    <div class="toolbar">
+      <button class="primary" id="savePerfil">Salvar</button>
+      <button id="resetPerfil">Resetar</button>
+    </div>
+  </section>
+
+  <!-- MODAL (detalhe pedido p/ imprimir/PDF) -->
+  <section id="modal" class="hidden" style="position:fixed;inset:0;background:#0009;display:flex;align-items:center;justify-content:center;z-index:5">
+    <div class="card" style="max-width:800px;width:95%;max-height:90vh;overflow:auto">
+      <div class="toolbar no-print">
+        <div class="muted">Detalhe do pedido</div>
+        <div class="right">
+          <button id="btnPrint">Imprimir</button>
+          <button id="btnClose">Fechar</button>
+        </div>
+      </div>
+      <div id="docPedido"></div>
+    </div>
+  </section>
+
+</div>
+
+<script src="app.js"></script>
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('./service-worker.js');
+    });
+  }
+</script>
+</body>
+</html>
