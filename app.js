@@ -597,3 +597,17 @@ $('#novoProdutoBtn')?.addEventListener('click', async ()=>{
 openDB().then(()=>{
   show('home');
 });
+
+// --- Fechar modal de detalhe do pedido ---
+document.addEventListener("DOMContentLoaded", function() {
+    const fecharBtn = document.getElementById("btnFecharDetalhe");
+    if (fecharBtn) {
+        fecharBtn.addEventListener("click", function() {
+            const modal = document.getElementById("detalhePedidoModal");
+            if (modal) {
+                modal.style.display = "none";
+            }
+        });
+    }
+});
+
